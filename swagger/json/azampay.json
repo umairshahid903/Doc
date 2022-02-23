@@ -1,0 +1,1161 @@
+{
+  "openapi": "3.0.1",
+  "schemes": ["https"],
+  "info": {
+    "title": "Azampay API",
+    "version": "v1",
+    "description": "Azampay RESTful API.\n# Introduction \n\n<p style='text-align: justify !important'>AzamPay is specialized in the development of end-to-end online payment management solutions for companies operating in East Africa. Our range of digital solutions and services are carefully designed not only to streamline your payment and collection processes, but to also allow easy integration with your current Accounting or Enterprise Resource Planning (ERP) systems thus leaving you time to focus on your customers. AzamPay offers bespoke solutions that guarantee optimal business performance and efficiency whether you are transacting locally, regionally, or internationally.</p> \n\n<p style='text-align: justify !important'>We strive to consistently improve our products to better meet the needs of a dynamic East African payments environment. As an AzamPay client, you will be able to leverage your presence across East Africa and extend your services regionally. Remember, we endeavour to follow you throughout your business adventure.</p> \n\n<image src='../../overview.svg' alt='Azampay Overview Image' style='width:100% !important; height:300px; box-sizing: content-box;'/>\n\n# Authentication\n\nAzampay offers two forms of authentication:\n  - API Key\n  - Bearer Auth - an open protocol to allow secure authorization in a simple\nand standard method from web, mobile and desktop applications.",
+    "contact": {
+      "name": "Azampay",
+      "url": "https://www.azampay.com/"
+    },
+    "x-logo": {
+      "url": "../../download.png"
+    },
+    "x-providerName": "azampay.com",
+    "x-unofficialSpec": true
+  },
+  "produces": ["application/json"],
+  "tags": [
+    {
+      "description": "Generate Token For App",
+      "name": "Token Generation"
+    },
+    {
+      "description": "<strong>Flow Diagram</strong> \n<image src='../../flow-diagrams/openapi-flow.svg' alt='Open API Flow Diagram' style='width:500px !important;'/> ",
+      "name": "Open API"
+    },
+    {
+      "description": "<strong>Flow Diagram</strong> \n<image src='../../flow-diagrams/checkout-flow.svg' alt='Checkout Flow Diagram' style='width:500px !important;'/> ",
+      "name": "Checkout"
+    }
+  ],
+  "x-tagGroups": [
+    {
+      "name": "APIs",
+      "tags": ["Token Generation", "Open API", "Checkout"]
+    }
+  ],
+  "paths": {
+    "/AppRegistration/GenerateToken": {
+      "post": {
+        "description": "Generate the access token in order to access Azampay public end points",
+        "x-codeSamples": [
+          {
+            "lang": "Node JS",
+            "source": "const fetch = require('node-fetch');\nconst data = {'appName': 'myApp', 'clientId': '0000-0000', 'secretKey': 'XRTRFF123ADED$FFAER'};\nfetch('{BaseUrl}/AppRegistration/GenerateToken', {\n method: 'POST',\n body: data, \n})\n.then(res => { /* response */ })\n.catch(err => { /* error */ });"
+          },
+          {
+            "lang": ".Net",
+            "source": "public class Data {\n public string AppName { get; set; }\n public string ClientId { get; set; }\n public string SecretKey { get; set; }\n}\nData data = new Data() { AppName = \"App\",ClientId = \"0000\",SecretKey = \"SKEY\" };\nHttpClient client = new HttpClient();\nclient.BaseAddress = new Uri(\"{BaseUrl}/AppRegistration/\"); \nclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(\"application/json\"));\nHttpResponseMessage response = client.PostAsJsonAsync(\"GenerateToken\", data).Result; \nif (response.statusCode == 200) { // success } \nelse { // error }"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenGeneration"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenGeneration200Response"
+                }
+              }
+            }
+          },
+          "423": {
+            "description": "Invalid detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenGeneration423Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something wrong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenGeneration500Response"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Generate Token For App",
+        "tags": ["Token Generation"]
+      }
+    },
+    "/api/v1/OpenApi/{paymentProvider}/checkuser": {
+      "post": {
+        "description": "",
+
+        "parameters": [
+          {
+            "name": "paymentprovider",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+
+        "x-codeSamples": [
+          {
+            "lang": "Node JS",
+            "source": "const fetch = require('node-fetch');\nconst paymentProvider = 'Payment Provider';\nconst data = {'version': 1, 'method': null,'data':{'amount': 2000}, 'checksum': null};\nconst  headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + TOKEN, 'X-API-Key': 'API-KEY'};\nfetch(`{BaseUrl}/api/v1/OpenApi/${paymentProvider}/checkuser`, {\n method: 'POST',\n headers, \nbody: data, \n})\n.then(res => { /* response */})\n.catch(err => {/* error */});"
+          },
+          {
+            "lang": ".Net",
+            "source": "public class PaymentData { \n public int Amount { get; set; } \n public string? BankCode { get; set; } \n public string? CustomerNumber { get; set; } \n public string? CustomerReferenceNumber { get; set; } \n public string? RequestId { get; set; } \n public string? ServiceType { get; set; } \n public string? TxnReferenceNumber { get; set; }\n}\npublic class Model {\n public int Version { get; set; }\n public string? Method { get; set; }\n public PaymentData Data { get; set; }\n public string? Checksum { get; set; }\n}\nModel data = new Model() { Version = 1, Data = new PaymentData() { Amount = 2000 } };\nHttpClient client = new HttpClient();\nclient.BaseAddress = new Uri(\"{BaseUrl}/api/v1/OpenApi/\"); \nclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(\"application/json\"));\nhttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(\"Bearer\", TOKEN); \nclient.DefaultRequestHeaders.Add(\"x-api-key\", KEY)\nHttpResponseMessage response = client.PostAsJsonAsync(string.Format(\"{paymentProvider}/checkuser\", PAYMENT-PROVIDER), data).Result; \nif (response.statusCode == 200) { // success } \nelse { // error }"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerNameLookupReponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer Auth": [],
+            "x-api-key": []
+          }
+        ],
+        "summary": "Check User",
+        "tags": ["Open API"]
+      }
+    },
+    "/api/v1/OpenApi/{paymentProvider}/paybill": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "paymentprovider",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "Node JS",
+            "source": "const fetch = require('node-fetch');\nconst paymentProvider = 'Payment Provider';\nconst data = {'version': 1, 'method': null,'data':{'amount': 2000}, 'checksum': null};\nconst  headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + TOKEN, 'X-API-Key': 'API-KEY'};\nfetch(`{BaseUrl}/api/v1/OpenApi/${paymentProvider}/paybill`, {\n method: 'POST',\n headers, \n body: data, \n})\n.then(res => { /* response */})\n.catch(err => {/* error */});"
+          },
+          {
+            "lang": ".Net",
+            "source": "public class PaymentData { \n public int Amount { get; set; } \n public string? BankCode { get; set; } \n public string? CustomerNumber { get; set; } \n public string? CustomerReferenceNumber { get; set; } \n public string? RequestId { get; set; } \n public string? ServiceType { get; set; } \n public string? TxnReferenceNumber { get; set; }\n}\npublic class Model {\n public int Version { get; set; }\n public string? Method { get; set; }\n public PaymentData Data { get; set; }\n public string? Checksum { get; set; }\n}\nModel data = new Model() { Version = 1, Data = new PaymentData() { Amount = 2000 } };\nHttpClient client = new HttpClient();\nclient.BaseAddress = new Uri(\"{BaseUrl}/api/v1/OpenApi/\"); \nclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(\"application/json\"));\nhttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(\"Bearer\", TOKEN); \nclient.DefaultRequestHeaders.Add(\"x-api-key\", KEY)\nHttpResponseMessage response = client.PostAsJsonAsync(string.Format(\"{paymentProvider}/paybill\", PAYMENT-PROVIDER), data).Result; \nif (response.statusCode == 200) { // success } \nelse { // error }"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer Auth": [],
+            "x-api-key": []
+          }
+        ],
+        "summary": "Pay Bill",
+        "tags": ["Open API"]
+      }
+    },
+    "/api/v1/OpenApi/{paymentProvider}/checkuserNpaybill": {
+      "post": {
+        "description": "description",
+        "parameters": [
+          {
+            "name": "paymentprovider",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "Node JS",
+            "source": "const fetch = require('node-fetch');\nconst paymentProvider = 'Payment Provider';\nconst data = {'version': 1, 'method': null,'data':{'amount': 2000}, 'checksum': null};\nconst  headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + TOKEN, 'X-API-Key': 'API-KEY'};\nfetch(`{BaseUrl}/api/v1/OpenApi/${paymentProvider}/checkuserNpaybill`, {\n method: 'POST',\n headers, \n body: data, \n})\n.then(res => { /* response */})\n.catch(err => {/* error */});"
+          },
+          {
+            "lang": ".Net",
+            "source": "public class PaymentData { \n public int Amount { get; set; } \n public string? BankCode { get; set; } \n public string? CustomerNumber { get; set; } \n public string? CustomerReferenceNumber { get; set; } \n public string? RequestId { get; set; } \n public string? ServiceType { get; set; } \n public string? TxnReferenceNumber { get; set; }\n}\npublic class Model {\n public int Version { get; set; }\n public string? Method { get; set; }\n public PaymentData Data { get; set; }\n public string? Checksum { get; set; }\n}\nModel data = new Model() { Version = 1, Data = new PaymentData() { Amount = 2000 } };\nHttpClient client = new HttpClient();\nclient.BaseAddress = new Uri(\"{BaseUrl}/api/v1/OpenApi/\"); \nclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(\"application/json\"));\nhttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(\"Bearer\", TOKEN); \nclient.DefaultRequestHeaders.Add(\"x-api-key\", KEY)\nHttpResponseMessage response = client.PostAsJsonAsync(string.Format(\"{paymentProvider}/checkuserNpaybill\", PAYMENT-PROVIDER), data).Result; \nif (response.statusCode == 200) { // success } \nelse { // error }"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer Auth": [],
+            "x-api-key": []
+          }
+        ],
+        "summary": "Check User N Pay Bill",
+        "tags": ["Open API"]
+      }
+    },
+    "/api/v1/OpenApi/{paymentProvider}/sandbox/checkuser": {
+      "post": {
+        "description": "",
+        "x-codeSamples": [
+          {
+            "lang": "Node JS",
+            "source": "const fetch = require('node-fetch');\nconst paymentProvider = 'Payment Provider';\nconst data = {'version': 1, 'method': null,'data':{'amount': 2000}, 'checksum': null};\nconst  headers = { 'Content-Type': 'application/json'};\nfetch(`{BaseUrl}/api/v1/OpenApi/${paymentProvider}/sandbox/checkuser`, {\n method: 'POST',\n headers, \n body: data, \n})\n.then(res => { /* response */})\n.catch(err => {/* error */});"
+          },
+          {
+            "lang": ".Net",
+            "source": "public class PaymentData { \n public int Amount { get; set; } \n public string? BankCode { get; set; } \n public string? CustomerNumber { get; set; } \n public string? CustomerReferenceNumber { get; set; } \n public string? RequestId { get; set; } \n public string? ServiceType { get; set; } \n public string? TxnReferenceNumber { get; set; }\n}\npublic class Model {\n public int Version { get; set; }\n public string? Method { get; set; }\n public PaymentData Data { get; set; }\n public string? Checksum { get; set; }\n}\nModel data = new Model() { Version = 1, Data = new PaymentData() { Amount = 2000 } };\nHttpClient client = new HttpClient();\nclient.BaseAddress = new Uri(\"{BaseUrl}/api/v1/OpenApi/\"); \nclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(\"application/json\"));\nHttpResponseMessage response = client.PostAsJsonAsync(string.Format(\"{paymentProvider}/sandbox/checkuser\", PAYMENT-PROVIDER), data).Result; \nif (response.statusCode == 200) { // success } \nelse { // error }"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "summary": "Check User (Sandbox)",
+        "tags": ["Open API"]
+      }
+    },
+    "/api/v1/OpenApi/{paymentProvider}/sandbox/paybill": {
+      "post": {
+        "description": "",
+        "x-codeSamples": [
+          {
+            "lang": "Node JS",
+            "source": "const fetch = require('node-fetch');\nconst paymentProvider = 'Payment Provider';\nconst data = {'version': 1, 'method': null,'data':{'amount': 2000}, 'checksum': null};\nconst  headers = { 'Content-Type': 'application/json'};\nfetch(`{BaseUrl}/api/v1/OpenApi/${paymentProvider}/sandbox/paybill`, {\n method: 'POST',\n headers, \n body: data, \n})\n.then(res => { /* response */})\n.catch(err => {/* error */});"
+          },
+          {
+            "lang": ".Net",
+            "source": "public class PaymentData { \n public int Amount { get; set; } \n public string? BankCode { get; set; } \n public string? CustomerNumber { get; set; } \n public string? CustomerReferenceNumber { get; set; } \n public string? RequestId { get; set; } \n public string? ServiceType { get; set; } \n public string? TxnReferenceNumber { get; set; }\n}\npublic class Model {\n public int Version { get; set; }\n public string? Method { get; set; }\n public PaymentData Data { get; set; }\n public string? Checksum { get; set; }\n}\nModel data = new Model() { Version = 1, Data = new PaymentData() { Amount = 2000 } };\nHttpClient client = new HttpClient();\nclient.BaseAddress = new Uri(\"{BaseUrl}/api/v1/OpenApi/\"); \nclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(\"application/json\"));\nHttpResponseMessage response = client.PostAsJsonAsync(string.Format(\"{paymentProvider}/sanbox/paybill\", PAYMENT-PROVIDER), data).Result; \nif (response.statusCode == 200) { // success } \nelse { // error }"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "summary": "Pay Bill (Sandbox)",
+        "tags": ["Open API"]
+      }
+    },
+    "/api/v1/OpenApi/{paymentProvider}/sandbox/paybillAsync": {
+      "post": {
+        "description": "",
+        "x-codeSamples": [
+          {
+            "lang": "Node JS",
+            "source": "const fetch = require('node-fetch');\nconst paymentProvider = 'Payment Provider';\nconst data = {'version': 1, 'method': null,'data':{'amount': 2000}, 'checksum': null};\nconst  headers = { 'Content-Type': 'application/json'};\nfetch(`{BaseUrl}/api/v1/OpenApi/${paymentProvider}/sandbox/paybillAsync`, {\n method: 'POST',\n headers, \n body: data, \n})\n.then(res => { /* response */})\n.catch(err => {/* error */});"
+          },
+          {
+            "lang": ".Net",
+            "source": "public class PaymentData { \n public int Amount { get; set; } \n public string? BankCode { get; set; } \n public string? CustomerNumber { get; set; } \n public string? CustomerReferenceNumber { get; set; } \n public string? RequestId { get; set; } \n public string? ServiceType { get; set; } \n public string? TxnReferenceNumber { get; set; }\n}\npublic class Model {\n public int Version { get; set; }\n public string? Method { get; set; }\n public PaymentData Data { get; set; }\n public string? Checksum { get; set; }\n}\nModel data = new Model() { Version = 1, Data = new PaymentData() { Amount = 2000 } };\nHttpClient client = new HttpClient();\nclient.BaseAddress = new Uri(\"{BaseUrl}/api/v1/OpenApi/\"); \nclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(\"application/json\"));\nHttpResponseMessage response = client.PostAsJsonAsync(string.Format(\"{paymentProvider}/sandbox/paybillAsync\", PAYMENT-PROVIDER), data).Result; \nif (response.statusCode == 200) { // success } \nelse { // error }"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "summary": "Pay Bill Async (Sandbox)",
+        "tags": ["Open API"]
+      }
+    },
+    "/api/v1/OpenApi/{paymentProvider}/MerchantPaymentAsync": {
+      "post": {
+        "description": "",
+        "x-codeSamples": [
+          {
+            "lang": "Node JS",
+            "source": "const fetch = require('node-fetch');\nconst paymentProvider = 'Payment Provider';\nconst data = {'version': 1, 'method': null,'data': {'amount': 2000}, 'checksum': null};\nconst  headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + TOKEN, 'X-API-Key': 'API-KEY'};\nfetch(`{BaseUrl}/api/v1/OpenApi/${paymentProvider}/MerchantPaymentAsync`, {\n method: 'POST',\n headers, \n body: data, \n})\n.then(res => { /* response */})\n.catch(err => {/* error */});"
+          },
+          {
+            "lang": ".Net",
+            "source": "public class PaymentData { \n public int Amount { get; set; } \n public string? BankCode { get; set; } \n public string? CustomerNumber { get; set; } \n public string? CustomerReferenceNumber { get; set; } \n public string? RequestId { get; set; } \n public string? ServiceType { get; set; } \n public string? TxnReferenceNumber { get; set; }\n}\npublic class Model {\n public int Version { get; set; }\n public string? Method { get; set; }\n public PaymentData Data { get; set; }\n public string? Checksum { get; set; }\n}\nModel data = new Model() { Version = 1, Data = new PaymentData() { Amount = 2000 } };\nHttpClient client = new HttpClient();\nclient.BaseAddress = new Uri(\"{BaseUrl}/api/v1/OpenApi/\"); \nclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(\"application/json\"));\nhttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(\"Bearer\", TOKEN); \nclient.DefaultRequestHeaders.Add(\"x-api-key\", KEY)\nHttpResponseMessage response = client.PostAsJsonAsync(string.Format(\"{paymentProvider}/checkuser\", PAYMENT-PROVIDER), data).Result; \nif (response.statusCode == 200) { // success } \nelse { // error }"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "bearer Auth": [],
+            "x-api-key": []
+          }
+        ],
+        "summary": "Merchant Payment Async",
+        "tags": ["Open API"]
+      }
+    },
+    "/api/v1/Checkout/Checkout": {
+      "post": {
+        "operationId": "Checkout",
+        "description": "Checkout and make payment to requested provider.",
+        "x-codeSamples": [
+          {
+            "lang": "Node JS",
+            "source": "const fetch = require('node-fetch');\nconst data = {'accountNumber': '1292-123', 'amount':'2000', 'currency':'RWP','externalId':'123','provider':'MTN','serviceActivationCode':'AX','additionalProperties':null};\nconst  headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + TOKEN, 'X-API-Key': 'API-KEY'};\nfetch(`{BaseUrl}/api/v1/Checkout/Checkout`, {\n method: 'POST',\n headers, \n body: data, \n})\n.then(res => { /* response */})\n.catch(err => {/* error */});"
+          },
+          {
+            "lang": ".Net",
+            "source": "public class Data { \n public string Amount { get; set; } \n public string AccountNumber { get; set; } \n public string Currency { get; set; } \n public object AdditionalProperties { get; set; }\n public string ExternalId { get; set; } \n public string Provider { get; set; } \n public string ServiceActivationCode { get; set; } \n}\nData data = new Data() { AccountNumber= \"1292-123\", Amount:\"2000\", Currency:\"RWP\",ExternalId:\"123\",Provider:\"MTN\",ServiceActivationCode:\"AX\" };\nHttpClient client = new HttpClient();\nclient.BaseAddress = new Uri(\"{BaseUrl}/api/v1/Checkout/\"); \nclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(\"application/json\"));\nhttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(\"Bearer\", TOKEN); \nclient.DefaultRequestHeaders.Add(\"x-api-key\", KEY)\nHttpResponseMessage response = client.PostAsJsonAsync(\"Checkout\", data).Result; \nif (response.statusCode == 200) { // success } \nelse { // error }"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer Auth": [],
+            "x-api-key": []
+          }
+        ],
+        "summary": "Checkout",
+        "tags": ["Checkout"]
+      }
+    },
+    "/api/v1/Checkout/Callback": {
+      "post": {
+        "operationId": "Callback",
+        "description": "",
+        "x-codeSamples": [
+          {
+            "lang": "Node JS",
+            "source": "const fetch = require('node-fetch');\nconst data = {'externalId': '1292-123', 'status':'success', 'additionalProperties':null,'description':'Description','provider':'MTN','amount':'2000','accountNumber':'0178823', 'subAccountNumber':'01723113'};\nconst  headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + TOKEN, 'X-API-Key': 'API-KEY'};\nfetch(`{BaseUrl}/api/v1/Checkout/Callback`, {\n method: 'POST',\n headers, \n body: data, \n})\n.then(res => { /* response */})\n.catch(err => {/* error */});"
+          },
+          {
+            "lang": ".Net",
+            "source": "public class Data { \n public string ExternalId { get; set; } \n public string Status { get; set; } \n public string ReferneceId { get; set; } \n public object AdditionalProperties { get; set; } \n public string Provider { get; set; } \n public string Amount { get; set; }\n public string AccountNumber { get; set; } \n public string SubAccountNumber { get; set; } \n}\nData data = new Data() { AccountNumber= \"1292-123\", Amount:\"2000\", Currency:\"RWP\",ExternalId:\"123\",Provider:\"MTN\",ServiceActivationCode:\"AX\" };\nHttpClient client = new HttpClient();\nclient.BaseAddress = new Uri(\"{BaseUrl}/api/v1/Checkout/\"); \nclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(\"application/json\"));\nhttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(\"Bearer\", TOKEN); \nclient.DefaultRequestHeaders.Add(\"x-api-key\", KEY)\nHttpResponseMessage response = client.PostAsJsonAsync(\"Callback\", data).Result; \nif (response.statusCode == 200) { // success } \nelse { // error }"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CallbackRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "bearer Auth": [],
+            "x-api-key": []
+          }
+        ],
+        "summary": "Callback",
+        "tags": ["Checkout"]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearer Auth": {
+        "description": "Get access to data while protecting your account credentials.\nJWT is also a safer and more secure way to give you access.\n",
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "in": "header"
+      },
+      "x-api-key": {
+        "description": "For this sample, you can use the api key `special-key`.\n",
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    },
+    "schemas": {
+      "TokenGeneration200Response": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "example": {
+              "accessToken": {
+                "type": "object"
+              },
+              "expire": {
+                "type": "object"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "Token generated successfully"
+          },
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32",
+            "example": 200
+          }
+        },
+        "additionalProperties": false
+      },
+      "TokenGeneration423Response": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string",
+            "example": null
+          },
+          "message": {
+            "type": "string",
+            "example": "Provided detail is not valid for this app or secret key has been expired"
+          },
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32",
+            "example": 423
+          }
+        },
+        "additionalProperties": false
+      },
+      "TokenGeneration500Response": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string",
+            "example": "Something went wrong"
+          },
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32",
+            "example": 500
+          }
+        },
+        "additionalProperties": false
+      },
+      "Response": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TokenGeneration": {
+        "required": ["appName", "clientId", "clientSecret"],
+        "type": "object",
+        "properties": {
+          "appName": {
+            "type": "string",
+            "description": "It will be the name of application."
+          },
+          "clientId": {
+            "type": "string",
+            "description": "It will be the client id which generated during application registration."
+          },
+          "clientSecret": {
+            "type": "string",
+            "description": "It will be the secret key which generated during application registration."
+          }
+        },
+        "additionalProperties": false
+      },
+
+      "AirtelUSSDRequest": {
+        "type": "object",
+        "properties": {
+          "apIusername": {
+            "type": "string",
+            "nullable": true
+          },
+          "apiPassword": {
+            "type": "string",
+            "nullable": true
+          },
+          "transID": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "string",
+            "nullable": true
+          },
+          "paybillnumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceField": {
+            "type": "string",
+            "nullable": true
+          },
+          "msisdn": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AirtelUSSDResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "transID": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceField": {
+            "type": "string",
+            "nullable": true
+          },
+          "msisdn": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerNameLookupReponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/DataResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DataResponse": {
+        "type": "object",
+        "properties": {
+          "customerReferenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ExternalServiceDb": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "serviceName": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceURL": {
+            "type": "string",
+            "nullable": true
+          },
+          "httpMethodType": {
+            "type": "string",
+            "nullable": true
+          },
+          "httpHeader": {
+            "type": "string",
+            "nullable": true
+          },
+          "sslCertificateCheck": {
+            "type": "boolean"
+          },
+          "isRetryEnabled": {
+            "type": "boolean"
+          },
+          "requestOptions": {
+            "type": "string",
+            "nullable": true
+          },
+          "requestType": {
+            "type": "string",
+            "nullable": true
+          },
+          "request": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ExternalServiceDbPaginatedResults": {
+        "type": "object",
+        "properties": {
+          "pagingInfo": {
+            "$ref": "#/components/schemas/PagingInfo"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalServiceDb"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FilterInfo": {
+        "type": "object",
+        "properties": {
+          "filterKey": {
+            "type": "string",
+            "nullable": true
+          },
+          "filterValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "operator": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagingInfo": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalItems": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+
+      "PaymentData": {
+        "type": "object",
+        "properties": {
+          "txnReferenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "requestId": {
+            "type": "string",
+            "nullable": true
+          },
+          "bankCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerReferenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "serviceType": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentPartnerDb": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "operatorCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "partnerType": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentPartnerDbPaginatedResults": {
+        "type": "object",
+        "properties": {
+          "pagingInfo": {
+            "$ref": "#/components/schemas/PagingInfo"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentPartnerDb"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+      "PaymentRequest": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "method": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/PaymentData"
+          },
+          "checksum": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/PaymentResponseData"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentResponseData": {
+        "type": "object",
+        "properties": {
+          "txnReferenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "requestId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentVendorDb": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vendorCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "vendorProcessingRoute": {
+            "type": "string",
+            "nullable": true
+          },
+          "vendorIntimationRoute": {
+            "type": "string",
+            "nullable": true
+          },
+          "businessTin": {
+            "type": "string",
+            "nullable": true
+          },
+          "taxCertificateUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "countryCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "businessVat": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalInfo": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentVendorDbPaginatedResults": {
+        "type": "object",
+        "properties": {
+          "pagingInfo": {
+            "$ref": "#/components/schemas/PagingInfo"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentVendorDb"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CheckoutRequest": {
+        "required": [
+          "accountNumber",
+          "amount",
+          "currency",
+          "externalId",
+          "provider",
+          "serviceActivationCode"
+        ],
+        "type": "object",
+        "properties": {
+          "provider": {
+            "$ref": "#/components/schemas/Provider"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          },
+          "externalId": {
+            "type": "string"
+          },
+          "serviceActivationCode": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CheckoutResponse": {
+        "type": "object",
+        "properties": {
+          "transactionId": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CallbackRequest": {
+        "required": [
+          "externalId",
+          "status",
+          "referenceId",
+          "description",
+          "provider",
+          "amount",
+          "accountNumber",
+          "subAccountNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "externalId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "referenceId": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "description": {
+            "type": "string"
+          },
+          "provider": {
+            "$ref": "#/components/schemas/Provider"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          },
+          "subAccountNumber": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CallbackResponse": {
+        "type": "object",
+        "properties": {
+          "transactionId": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Provider": {
+        "enum": ["MTN", "Airtel"],
+        "type": "string"
+      }
+    }
+  }
+}
