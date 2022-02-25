@@ -3,13 +3,13 @@
   "info": {
     "title": "Azampay API",
     "version": "v1",
-    "description": "Azampay RESTful API.\n# Introduction \n\n<p style='text-align: justify !important'>AzamPay is specialized in the development of end-to-end online payment management solutions for companies operating in East Africa. Our range of digital solutions and services are carefully designed not only to streamline your payment and collection processes, but to also allow easy integration with your current Accounting or Enterprise Resource Planning (ERP) systems thus leaving you time to focus on your customers. AzamPay offers bespoke solutions that guarantee optimal business performance and efficiency whether you are transacting locally, regionally, or internationally.</p> \n\n<p style='text-align: justify !important'>We strive to consistently improve our products to better meet the needs of a dynamic East African payments environment. As an AzamPay client, you will be able to leverage your presence across East Africa and extend your services regionally. Remember, we endeavour to follow you throughout your business adventure.</p> \n\n<image src='./overview.svg' alt='Azampay Overview Image' style='width:100% !important; height:300px; box-sizing: content-box;'/>\n\n# Authentication\n\nAzampay offers two forms of authentication:\n  - API Key\n  - Bearer Auth - an open protocol to allow secure authorization in a simple\nand standard method from web, mobile and desktop applications.",
+    "description": "Azampay RESTful API.\n# Introduction \n\n<p style='text-align: justify !important'>AzamPay is specialized in the development of end-to-end online payment management solutions for companies operating in East Africa. Our range of digital solutions and services are carefully designed not only to streamline your payment and collection processes, but to also allow easy integration with your current Accounting or Enterprise Resource Planning (ERP) systems thus leaving you time to focus on your customers. AzamPay offers bespoke solutions that guarantee optimal business performance and efficiency whether you are transacting locally, regionally, or internationally.</p> \n\n<p style='text-align: justify !important'>We strive to consistently improve our products to better meet the needs of a dynamic East African payments environment. As an AzamPay client, you will be able to leverage your presence across East Africa and extend your services regionally. Remember, we endeavour to follow you throughout your business adventure.</p> \n\n<image src='https://api.redoc.ly/registry/assets/doc-g9w/Doc%20With%20Assets/v1/overview.svg' alt='Azampay Overview Image' style='width:100% !important; height:300px; box-sizing: content-box;'/>\n\n# Authentication\n\nAzampay offers two forms of authentication:\n  - API Key\n  - Bearer Auth - an open protocol to allow secure authorization in a simple\nand standard method from web, mobile and desktop applications.",
     "contact": {
       "name": "Azampay",
       "url": "https://www.azampay.com/"
     },
     "x-logo": {
-      "url": "./download.png"
+      "url": "https://api.redoc.ly/registry/assets/doc-g9w/Doc%20With%20Assets/v1/download.png"
     },
     "x-providerName": "azampay.com",
     "x-unofficialSpec": true
@@ -20,11 +20,11 @@
       "name": "Token Generation"
     },
     {
-      "description": "<strong>Flow Diagram</strong> \n<image src='./openapi-flow.svg' alt='Open API Flow Diagram' style='width:500px !important;'/> ",
+      "description": "<strong>Flow Diagram</strong> \n<image src='https://api.redoc.ly/registry/assets/doc-g9w/Doc%20With%20Assets/v1/openapi-flow.svg' alt='Open API Flow Diagram' style='width:500px !important;'/> ",
       "name": "Open API"
     },
     {
-      "description": "<strong>Flow Diagram</strong> \n<image src='./checkout-flow.svg' alt='Checkout Flow Diagram' style='width:500px !important;'/> ",
+      "description": "<strong>Flow Diagram</strong> \n<image src='https://api.redoc.ly/registry/assets/doc-g9w/Doc%20With%20Assets/v1/checkout-flow.svg' alt='Checkout Flow Diagram' style='width:500px !important;'/> ",
       "name": "Checkout"
     }
   ],
